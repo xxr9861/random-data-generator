@@ -1,0 +1,59 @@
+input_file=$@
+output_file=
+##my_ifs=" " #somehow this does not work
+# use my_ifs="|"; for use with emacs org mode
+
+user_prompter(){
+	echo "name of the outputfile"
+	read output_file
+
+    echo "number of coloums required"
+    read coloums
+    if expr $coloums + 0 > /dev/null 2>&1
+    then
+	:
+    else
+	echo "a number is required for the variable coloum"
+    fi
+    
+    echo "number of rows required"
+    read rows
+    if expr $rows + 0 > /dev/null 2>&1
+    then
+	:
+    else
+	echo "a number is required for the variable rows"
+    fi
+
+    }
+
+generate_random_number(){
+
+    echo -e -n $(( $RANDOM % 1000 )); printf " "
+
+}
+
+
+single_line_generator(){
+
+    for i in `seq $coloums`
+    do
+	echo -n $(generate_random_number)
+	echo -n " "
+    done
+    
+	echo #a new line
+}
+
+repeater(){
+
+    for i in `seq $rows`
+    do
+	single_line_generator
+    done
+
+}
+
+
+user_prompter
+repeater >> $output_file
